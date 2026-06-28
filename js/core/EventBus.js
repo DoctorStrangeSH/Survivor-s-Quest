@@ -1,16 +1,11 @@
-// Система событий для связи между модулями
-export class EventBus {
+class EventBusClass {
     constructor() {
         this.events = {};
     }
 
     on(event, callback) {
-        if (!this.events[event]) {
-            this.events[event] = [];
-        }
+        if (!this.events[event]) this.events[event] = [];
         this.events[event].push(callback);
-        
-        // Возвращаем функцию для отписки
         return () => this.off(event, callback);
     }
 
@@ -21,10 +16,9 @@ export class EventBus {
 
     emit(event, ...args) {
         if (!this.events[event]) return;
-        this.events[event].forEach(callback => callback(...args));
+        this.events[event].forEach(cb => cb(...args));
     }
 
-    // Одноразовый слушатель
     once(event, callback) {
         const wrapper = (...args) => {
             callback(...args);
@@ -34,4 +28,5 @@ export class EventBus {
     }
 }
 
-export const eventBus = new EventBus();
+export const eventBus = new EventBusClass();
+export { eventBus as EventBus };

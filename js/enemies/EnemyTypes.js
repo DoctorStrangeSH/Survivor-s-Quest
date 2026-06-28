@@ -1,63 +1,83 @@
 export const EnemyTypes = {
-    slime: {
-        name: 'enemy.slime',
-        color: '#4ade80',
+    bat: {
         radius: 10,
-        speed: 80,
-        hp: 20,
-        exp: 5,
-        damage: 8,
-        gold: 2,
-        scaleHealth: 10,
-        scaleSpeed: 5
+        speed: 150,
+        hp: 10,
+        damage: 5,
+        exp: 3,
+        color: '#8b5cf6',
+        icon: '🦇'
     },
     skeleton: {
-        name: 'enemy.skeleton',
+        radius: 14,
+        speed: 90,
+        hp: 30,
+        damage: 10,
+        exp: 7,
         color: '#94a3b8',
-        radius: 12,
-        speed: 110,
-        hp: 40,
-        exp: 10,
-        damage: 12,
-        gold: 5,
-        scaleHealth: 15,
-        scaleSpeed: 5
+        icon: '💀'
     },
-    bat: {
-        name: 'enemy.bat',
-        color: '#c084fc',
-        radius: 8,
-        speed: 170,
-        hp: 15,
+    zombie: {
+        radius: 12,
+        speed: 60,
+        hp: 40,
+        damage: 15,
         exp: 8,
-        damage: 6,
-        gold: 3,
-        scaleHealth: 8,
-        scaleSpeed: 7
+        color: '#4ade80',
+        icon: '🧟'
+    },
+    ghost: {
+        radius: 11,
+        speed: 130,
+        hp: 15,
+        damage: 8,
+        exp: 5,
+        color: '#67e8f9',
+        icon: '👻'
     },
     golem: {
-        name: 'enemy.golem',
-        color: '#92400e',
-        radius: 18,
-        speed: 50,
+        radius: 20,
+        speed: 40,
         hp: 100,
-        exp: 25,
-        damage: 20,
-        gold: 15,
-        scaleHealth: 30,
-        scaleSpeed: 3
+        damage: 25,
+        exp: 20,
+        color: '#92400e',
+        icon: '🗿'
+    },
+    werewolf: {
+        radius: 16,
+        speed: 120,
+        hp: 60,
+        damage: 18,
+        exp: 15,
+        color: '#78716c',
+        icon: '🐺'
+    },
+    medusa: {
+        radius: 13,
+        speed: 70,
+        hp: 50,
+        damage: 12,
+        exp: 12,
+        color: '#2dd4bf',
+        icon: '🐍'
     },
     boss: {
-        name: 'enemy.boss',
-        color: '#ef4444',
         radius: 30,
-        speed: 40,
+        speed: 30,
         hp: 500,
-        exp: 200,
-        damage: 35,
-        gold: 100,
-        scaleHealth: 100,
-        scaleSpeed: 2,
-        isBoss: true
+        damage: 40,
+        exp: 100,
+        color: '#ef4444',
+        icon: '👹'
+    },
+    death: {
+        radius: 25,
+        speed: 100,
+        hp: 1000,
+        damage: 50,
+        exp: 500,
+        color: '#000000',
+        icon: '💀'
     }
 };

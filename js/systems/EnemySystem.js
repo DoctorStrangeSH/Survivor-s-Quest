@@ -1,151 +1,120 @@
-import { Enemy } from '../entities/Enemy.js';
-import { EnemyTypes } from '../enemies/EnemyTypes.js';
-import { eventBus } from '../core/EventBus.js';
-
 export class EnemySystem {
     constructor() {
         this.enemies = [];
         this.spawnTimer = 0;
-        this.spawnInterval = 1.5;
-        this.maxEnemies = 100;
     }
 
-    reset() {
-        this.enemies = [];
-        this.spawnTimer = 0;
-        this.spawnInterval = 1.5;
-    }
-
-    update(dt, player) {
-        // Спавн врагов
-        this.spawnTimer += dt;
-        if (this.spawnTimer >= this.spawnInterval && this.enemies.length < this.maxEnemies) {
-            this.spawnTimer = 0;
-            this.spawnWave(player);
+    update(dt, player, waveSystem) {
+        this.spawnTimer -= dt;
+        
+        if (this.spawnTimer <= 0) {
+            this.spawnEnemy(player, waveSystem);
+            this.spawnTimer = waveSystem.getSpawnInterval();
         }
         
         // Обновление врагов
         for (let i = this.enemies.length - 1; i >= 0; i--) {
             const enemy = this.enemies[i];
-            enemy.update(dt, player);
             
-            // Удаление мертвых врагов
-            if (enemy.isDead()) {
+            // Движение к игроку
+            const dx = player.x - enemy.x;
+            const dy = player.y - enemy.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if (dist > 0) {
+                enemy.x += (dx / dist) * enemy.speed * dt;
+                enemy.y += (dy / dist) * enemy.speed * dt;
+            }
+            
+            // Удаление мертвых
+            if (enemy.hp <= 0) {
                 this.enemies.splice(i, 1);
+                player.kills++;
+                player.addExp(enemy.exp);
+                
+                // Дроп опыта
+                if (Math.random() < 0.3) {
+                    // Создать пикап опыта
+                }
             }
         }
     }
 
-    spawnWave(player) {
-        const waveConfig = this.getWaveConfig();
-        const count = waveConfig.count;
-        
-        for (let i = 0; i < count; i++) {
-            this.spawnEnemy(player);
-        }
-    }
-
-    getWaveConfig() {
-        // Получаем текущую волну из WaveSystem через eventBus
-        let wave = 1;
-        // Здесь можно получить wave из глобального состояния
-        
-        const configs = {
-            1: { types: ['slime'], count: 2, boss: false },
-            2: { types: ['slime', 'skeleton'], count: 3, boss: false },
-            3: { types: ['slime', 'skeleton', 'bat'], count: 3, boss: false },
-            4: { types: ['skeleton', 'bat'], count: 4, boss: false },
-            5: { types: ['golem'], count: 1, boss: true },
-        };
-        
-        return configs[Math.min(wave, 5)] || { types: ['skeleton', 'golem'], count: 4, boss: false };
-    }
-
-    spawnEnemy(player) {
-        const waveConfig = this.getWaveConfig();
-        const type = waveConfig.types[Math.floor(Math.random() * waveConfig.types.length)];
-        const config = EnemyTypes[type];
-        
-        if (!config) return;
+    spawnEnemy(player, waveSystem) {
+        const type = waveSystem.getEnemyType();
+        const config = this.getEnemyConfig(type);
         
         // Спавн за экраном
-        const spawnPos = this.getSpawnPosition(player);
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 500 + Math.random() * 200;
         
-        // Масштабирование с уровнем
-        const enemy = new Enemy(type, spawnPos.x, spawnPos.y, {
-            ...config,
-            hp: config.hp + (this.getWave() - 1) * config.scaleHealth,
-            speed: config.speed + (this.getWave() - 1) * config.scaleSpeed,
-            gold: config.gold + Math.floor(this.getWave() / 2) * 5
+        this.enemies.push({
+            x: player.x + Math.cos(angle) * dist,
+            y: player.y + Math.sin(angle) * dist,
+            radius: config.radius,
+            speed: config.speed + waveSystem.getWave() * 3,
+            hp: config.hp + waveSystem.getWave() * 5,
+            maxHp: config.hp + waveSystem.getWave() * 5,
+            damage: config.damage,
+            exp: config.exp,
+            color: config.color,
+            type: type,
+            hitFlash: 0,
+            effects: []
         });
-        
-        this.enemies.push(enemy);
-        
-        if (config.isBoss) {
-            eventBus.emit('enemy:bossSpawned', enemy);
-        }
     }
 
-    getSpawnPosition(player) {
-        const canvas = document.getElementById('gameCanvas');
-        const margin = 100;
-        const side = Math.floor(Math.random() * 4);
-        let x, y;
-        
-        switch(side) {
-            case 0: // Сверху
-                x = player.x + (Math.random() - 0.5) * canvas.width;
-                y = player.y - canvas.height / 2 - margin;
-                break;
-            case 1: // Снизу
-                x = player.x + (Math.random() - 0.5) * canvas.width;
-                y = player.y + canvas.height / 2 + margin;
-                break;
-            case 2: // Слева
-                x = player.x - canvas.width / 2 - margin;
-                y = player.y + (Math.random() - 0.5) * canvas.height;
-                break;
-            case 3: // Справа
-                x = player.x + canvas.width / 2 + margin;
-                y = player.y + (Math.random() - 0.5) * canvas.height;
-                break;
-        }
-        
-        return { x, y };
-    }
-
-    spawnBoss(player, type = 'boss') {
-        const config = EnemyTypes[type];
-        if (!config) return;
-        
-        const spawnPos = this.getSpawnPosition(player);
-        const enemy = new Enemy(type, spawnPos.x, spawnPos.y, {
-            ...config,
-            hp: config.hp + this.getWave() * config.scaleHealth,
-            speed: config.speed,
-            gold: config.gold + this.getWave() * 20
-        });
-        
-        this.enemies.push(enemy);
-        eventBus.emit('enemy:bossSpawned', enemy);
-        
-        return enemy;
-    }
-
-    getEnemies() {
-        return this.enemies;
-    }
-
-    getEnemyCount() {
-        return this.enemies.length;
-    }
-
-    getWave() {
-        // Здесь должна быть связь с WaveSystem
-        return window.Game?.waveSystem?.wave || 1;
-    }
-
-    setSpawnInterval(interval) {
-        this.spawnInterval = interval;
+    getEnemyConfig(type) {
+        const configs = {
+            bat: {
+                radius: 10,
+                speed: 150,
+                hp: 10,
+                damage: 5,
+                exp: 3,
+                color: '#8b5cf6'
+            },
+            skeleton: {
+                radius: 14,
+                speed: 90,
+                hp: 30,
+                damage: 10,
+                exp: 7,
+                color: '#94a3b8'
+            },
+            zombie: {
+                radius: 12,
+                speed: 60,
+                hp: 40,
+                damage: 15,
+                exp: 8,
+                color: '#4ade80'
+            },
+            ghost: {
+                radius: 11,
+                speed: 130,
+                hp: 15,
+                damage: 8,
+                exp: 5,
+                color: '#67e8f9'
+            },
+            golem: {
+                radius: 20,
+                speed: 40,
+                hp: 100,
+                damage: 25,
+                exp: 20,
+                color: '#92400e'
+            },
+            boss: {
+                radius: 30,
+                speed: 30,
+                hp: 500,
+                damage: 40,
+                exp: 100,
+                color: '#ef4444'
+            }
+        };
+        return configs[type] || configs.bat;
     }
 }

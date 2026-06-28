@@ -1,77 +1,100 @@
 {
     "game": {
-        "title": "Survivor's Quest — Выживи!",
-        "loading": "Загрузка..."
-    },
-    "menu": {
-        "language": "Выберите язык / Select Language",
-        "pause": "ПАУЗА",
-        "continue": "ПРОДОЛЖИТЬ",
-        "restart": "ЗАНОВО",
-        "shop": "МАГАЗИН",
-        "close": "ЗАКРЫТЬ"
+        "title": "Vampire Survivors Web",
+        "version": "1.0.0"
     },
     "ui": {
         "hp": "HP",
-        "level": "LVL",
-        "exp": "EXP",
-        "gold": "💰",
-        "kills": "⚔️",
-        "time": "⏱",
-        "wave": "Волна",
-        "controls": "[WASD] Движение | [Q/E/R] Способности | [P] Пауза | [B] Магазин"
-    },
-    "death": {
-        "title": "ТЫ ПОГИБ",
-        "kills": "Убито",
-        "time": "Время",
-        "gold": "Золото",
-        "record": "Рекорд",
-        "wave": "Волна",
-        "playAgain": "ИГРАТЬ СНОВА"
+        "level": "УР",
+        "exp": "ОПЫТ",
+        "wave": "ВОЛНА",
+        "time": "ВРЕМЯ",
+        "kills": "УБИТО",
+        "gold": "ЗОЛОТО",
+        "pause": "ПАУЗА",
+        "continue": "ПРОДОЛЖИТЬ",
+        "restart": "ЗАНОВО",
+        "quit": "ВЫХОД"
     },
     "levelup": {
-        "title": "LEVEL UP!",
-        "choose": "Выбери улучшение:"
+        "title": "ПОВЫШЕНИЕ УРОВНЯ!",
+        "subtitle": "Выберите улучшение",
+        "hint": "Нажмите 1-4 для выбора"
     },
-    "upgrades": {
-        "damage": "+10 урона",
-        "damageDesc": "Увеличивает базовый урон",
-        "speed": "+15% скорости",
-        "speedDesc": "Двигайся быстрее",
-        "maxHp": "+20 макс HP",
-        "maxHpDesc": "Больше здоровья",
-        "attackSpeed": "+20% скорости атаки",
-        "attackSpeedDesc": "Бей чаще",
-        "abilityPower": "+Сила способностей",
-        "abilityPowerDesc": "Урон и лечение +50%"
+    "death": {
+        "title": "ВЫ ПОГИБЛИ",
+        "stats": "Статистика",
+        "playAgain": "ИГРАТЬ СНОВА",
+        "mainMenu": "ГЛАВНОЕ МЕНЮ"
     },
-    "abilities": {
-        "explosion": "Взрыв",
-        "freeze": "Заморозка",
-        "heal": "Исцеление"
-    },
-    "enemy": {
-        "slime": "Слизень",
-        "skeleton": "Скелет",
-        "bat": "Летучая мышь",
-        "golem": "Голем",
-        "boss": "БОСС"
-    },
-    "weapon": {
-        "dagger": "Кинжал",
+    "weapons": {
+        "whip": "Хлыст",
+        "whip_desc": "Атакует по дуге перед персонажем",
+        "magic_wand": "Волшебная палочка",
+        "magic_wand_desc": "Выпускает самонаводящиеся снаряды",
+        "garlic": "Чеснок",
+        "garlic_desc": "Создает ауру, наносящую урон вокруг",
+        "fire_wand": "Огненный жезл",
+        "fire_wand_desc": "Стреляет огненными шарами",
+        "king_bible": "Библия",
+        "king_bible_desc": "Вращающиеся книги вокруг персонажа",
+        "santa_water": "Святая вода",
+        "santa_water_desc": "Оставляет зоны, наносящие урон",
+        "lightning_ring": "Кольцо молний",
+        "lightning_ring_desc": "Поражает случайных врагов молнией",
         "axe": "Топор",
-        "flamethrower": "Огнемёт",
-        "lightning": "Молния",
-        "aura": "Аура"
+        "axe_desc": "Бросает топоры по дуге",
+        "cross": "Крест",
+        "cross_desc": "Бумеранг, возвращающийся обратно"
     },
-    "shop": {
-        "items": {
-            "heal5": "+5 HP",
-            "maxHp10": "+10 макс HP",
-            "damage5": "+5 урона",
-            "attackSpeed15": "+15% скорости атаки",
-            "fullHeal": "Полное исцеление"
-        }
+    "passives": {
+        "spinach": "Шпинат",
+        "spinach_desc": "Увеличивает урон на 10% за уровень",
+        "armor": "Доспех",
+        "armor_desc": "Уменьшает получаемый урон на 1 за уровень",
+        "hollow_heart": "Полое сердце",
+        "hollow_heart_desc": "Увеличивает максимальное HP на 20% за уровень",
+        "empty_tome": "Пустой том",
+        "empty_tome_desc": "Уменьшает перезарядку оружия на 8%",
+        "candelabrador": "Канделябр",
+        "candelabrador_desc": "Увеличивает область действия на 10%",
+        "spellbinder": "Связующее заклинание",
+        "spellbinder_desc": "Увеличивает длительность эффектов на 10%",
+        "duplicator": "Дубликатор",
+        "duplicator_desc": "Добавляет дополнительные снаряды",
+        "attractorb": "Магнит",
+        "attractorb_desc": "Увеличивает радиус подбора предметов",
+        "crown": "Корона",
+        "crown_desc": "Увеличивает получаемый опыт на 8%",
+        "stone_mask": "Каменная маска",
+        "stone_mask_desc": "Увеличивает получаемое золото на 10%",
+        "wings": "Крылья",
+        "wings_desc": "Увеличивает скорость передвижения на 10%"
+    },
+    "enemies": {
+        "bat": "Летучая мышь",
+        "skeleton": "Скелет",
+        "zombie": "Зомби",
+        "ghost": "Призрак",
+        "golem": "Голем",
+        "boss": "БОСС",
+        "medusa": "Медуза",
+        "werewolf": "Оборотень",
+        "death": "Смерть"
+    },
+    "waves": {
+        "new_wave": "ВОЛНА {wave}",
+        "boss_wave": "БОСС ВОЛНА!",
+        "wave_complete": "Волна {wave} пройдена!"
+    },
+    "pickups": {
+        "exp_gem": "Сфера опыта",
+        "gold_coin": "Золотая монета",
+        "health_potion": "Зелье здоровья",
+        "treasure": "Сокровище"
+    },
+    "evolutions": {
+        "evolved": "ЭВОЛЮЦИЯ!",
+        "requires": "Требуется: {weapon} + {passive}"
     }
 }

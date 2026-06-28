@@ -1,77 +1,100 @@
 {
     "game": {
-        "title": "Survivor's Quest - Survive!",
-        "loading": "Loading..."
-    },
-    "menu": {
-        "language": "Select Language / Выберите язык",
-        "pause": "PAUSE",
-        "continue": "CONTINUE",
-        "restart": "RESTART",
-        "shop": "SHOP",
-        "close": "CLOSE"
+        "title": "Vampire Survivors Web",
+        "version": "1.0.0"
     },
     "ui": {
         "hp": "HP",
         "level": "LVL",
         "exp": "EXP",
-        "gold": "💰",
-        "kills": "⚔️",
-        "time": "⏱",
-        "wave": "Wave",
-        "controls": "[WASD] Move | [Q/E/R] Abilities | [P] Pause | [B] Shop"
-    },
-    "death": {
-        "title": "YOU DIED",
-        "kills": "Kills",
-        "time": "Time",
-        "gold": "Gold",
-        "record": "Record",
-        "wave": "Wave",
-        "playAgain": "PLAY AGAIN"
+        "wave": "WAVE",
+        "time": "TIME",
+        "kills": "KILLS",
+        "gold": "GOLD",
+        "pause": "PAUSE",
+        "continue": "CONTINUE",
+        "restart": "RESTART",
+        "quit": "QUIT"
     },
     "levelup": {
         "title": "LEVEL UP!",
-        "choose": "Choose an upgrade:"
+        "subtitle": "Choose an upgrade",
+        "hint": "Press 1-4 to select"
     },
-    "upgrades": {
-        "damage": "+10 Damage",
-        "damageDesc": "Increase base damage",
-        "speed": "+15% Speed",
-        "speedDesc": "Move faster",
-        "maxHp": "+20 Max HP",
-        "maxHpDesc": "More health",
-        "attackSpeed": "+20% Attack Speed",
-        "attackSpeedDesc": "Attack faster",
-        "abilityPower": "+Ability Power",
-        "abilityPowerDesc": "Damage and healing +50%"
+    "death": {
+        "title": "YOU DIED",
+        "stats": "Statistics",
+        "playAgain": "PLAY AGAIN",
+        "mainMenu": "MAIN MENU"
     },
-    "abilities": {
-        "explosion": "Explosion",
-        "freeze": "Freeze",
-        "heal": "Heal"
-    },
-    "enemy": {
-        "slime": "Slime",
-        "skeleton": "Skeleton",
-        "bat": "Bat",
-        "golem": "Golem",
-        "boss": "BOSS"
-    },
-    "weapon": {
-        "dagger": "Dagger",
+    "weapons": {
+        "whip": "Whip",
+        "whip_desc": "Attacks in an arc in front of the character",
+        "magic_wand": "Magic Wand",
+        "magic_wand_desc": "Fires homing projectiles",
+        "garlic": "Garlic",
+        "garlic_desc": "Creates a damaging aura around you",
+        "fire_wand": "Fire Wand",
+        "fire_wand_desc": "Shoots fireballs",
+        "king_bible": "King Bible",
+        "king_bible_desc": "Orbiting books around the character",
+        "santa_water": "Santa Water",
+        "santa_water_desc": "Leaves damaging zones on the ground",
+        "lightning_ring": "Lightning Ring",
+        "lightning_ring_desc": "Strikes random enemies with lightning",
         "axe": "Axe",
-        "flamethrower": "Flamethrower",
-        "lightning": "Lightning",
-        "aura": "Aura"
+        "axe_desc": "Throws axes in an arc",
+        "cross": "Cross",
+        "cross_desc": "Boomerang that returns back"
     },
-    "shop": {
-        "items": {
-            "heal5": "+5 HP",
-            "maxHp10": "+10 Max HP",
-            "damage5": "+5 Damage",
-            "attackSpeed15": "+15% Attack Speed",
-            "fullHeal": "Full Heal"
-        }
+    "passives": {
+        "spinach": "Spinach",
+        "spinach_desc": "Increases damage by 10% per level",
+        "armor": "Armor",
+        "armor_desc": "Reduces incoming damage by 1 per level",
+        "hollow_heart": "Hollow Heart",
+        "hollow_heart_desc": "Increases max HP by 20% per level",
+        "empty_tome": "Empty Tome",
+        "empty_tome_desc": "Reduces weapon cooldown by 8%",
+        "candelabrador": "Candelabrador",
+        "candelabrador_desc": "Increases area of effect by 10%",
+        "spellbinder": "Spellbinder",
+        "spellbinder_desc": "Increases effect duration by 10%",
+        "duplicator": "Duplicator",
+        "duplicator_desc": "Adds additional projectiles",
+        "attractorb": "Attractorb",
+        "attractorb_desc": "Increases pickup range",
+        "crown": "Crown",
+        "crown_desc": "Increases experience gain by 8%",
+        "stone_mask": "Stone Mask",
+        "stone_mask_desc": "Increases gold gain by 10%",
+        "wings": "Wings",
+        "wings_desc": "Increases movement speed by 10%"
+    },
+    "enemies": {
+        "bat": "Bat",
+        "skeleton": "Skeleton",
+        "zombie": "Zombie",
+        "ghost": "Ghost",
+        "golem": "Golem",
+        "boss": "BOSS",
+        "medusa": "Medusa",
+        "werewolf": "Werewolf",
+        "death": "Death"
+    },
+    "waves": {
+        "new_wave": "WAVE {wave}",
+        "boss_wave": "BOSS WAVE!",
+        "wave_complete": "Wave {wave} complete!"
+    },
+    "pickups": {
+        "exp_gem": "Experience Gem",
+        "gold_coin": "Gold Coin",
+        "health_potion": "Health Potion",
+        "treasure": "Treasure"
+    },
+    "evolutions": {
+        "evolved": "EVOLUTION!",
+        "requires": "Requires: {weapon} + {passive}"
     }
 }
