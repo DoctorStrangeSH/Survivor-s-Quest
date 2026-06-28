@@ -11,20 +11,19 @@ export class Whip extends BaseWeapon {
             range: 80,
             area: 1,
             amount: 1,
-            knockback: 10,
-            evolution: 'bloody_tear',
-            evolutionPassive: 'hollow_heart'
+            knockback: 10
         });
-        this.arc = Math.PI / 2;
+        this.arc = Math.PI / 2; // 90 градусов
     }
 
     attack(enemies, projectiles, effects) {
-        const facing = this.player.facing;
         const damage = this.getDamage();
         const range = this.range * this.getArea();
+        const facing = this.player.facing;
         
         for (let i = 0; i < this.amount; i++) {
             const offsetAngle = i === 0 ? 0 : (i % 2 === 0 ? 1 : -1) * Math.PI / 6;
+            const facingAngle = Math.atan2(facing.y, facing.x) + offsetAngle;
             
             enemies.forEach(enemy => {
                 const dx = enemy.x - this.player.x;
@@ -33,21 +32,38 @@ export class Whip extends BaseWeapon {
                 
                 if (dist < range) {
                     const angle = Math.atan2(dy, dx);
-                    const facingAngle = Math.atan2(facing.y, facing.x) + offsetAngle;
                     let diff = angle - facingAngle;
                     
+                    // Нормализация угла
                     while (diff > Math.PI) diff -= Math.PI * 2;
                     while (diff < -Math.PI) diff += Math.PI * 2;
                     
                     if (Math.abs(diff) < this.arc / 2) {
-                        enemy.takeDamage(damage);
+                        // Враг - простой объект, вычитаем hp напрямую
+                        enemy.hp -= damage;
+                        enemy.hitFlash = 0.1;
                         
-                        if (this.knockback > 0) {
-                            enemy.x += Math.cos(angle) * this.knockback;
-                            enemy.y += Math.sin(angle) * this.knockback;
+                        // Отбрасывание
+                        if (this.knockback > 0 && dist > 0) {
+                            enemy.x += (dx / dist) * this.knockback;
+                            enemy.y += (dy / dist) * this.knockback;
                         }
                     }
                 }
+            });
+        }
+        
+        // Визуальный эффект взмаха
+        for (let i = 0; i < 5; i++) {
+            const a = facingAngle + (Math.random() - 0.5) * this.arc;
+            const d = Math.random() * range;
+            effects.push({
+                x: this.player.x + Math.cos(a) * d,
+                y: this.player.y + Math.sin(a) * d,
+                vx: 0, vy: 0,
+                life: 0.15, maxLife: 0.15,
+                color: '#fbbf24',
+                size: 3
             });
         }
     }

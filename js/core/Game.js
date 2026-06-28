@@ -13,11 +13,9 @@ export class Game {
         this.canvas = document.getElementById('gameCanvas');
         this.ctx = this.canvas.getContext('2d');
         
-        // Сначала создаем i18n
         this.i18n = new I18n();
         this.audio = new AudioManager();
         
-        // Игровые системы (создаем после i18n)
         this.player = null;
         this.enemySystem = null;
         this.weaponSystem = null;
@@ -26,118 +24,89 @@ export class Game {
         this.pickupSystem = null;
         this.ui = null;
         
-        // Состояние игры
         this.gameTime = 0;
         this.dt = 0;
         this.lastTime = 0;
-        this.state = 'playing'; // playing, levelup, paused, dead
+        this.state = 'menu';
         this.keys = {};
         this.levelUpOptions = [];
         
-        // Слоты
         this.MAX_WEAPONS = 6;
         this.MAX_PASSIVES = 6;
         
-        // Биндинг методов
         this.gameLoop = this.gameLoop.bind(this);
     }
 
     async init() {
-        try {
-            console.log('🎮 Initializing game...');
-            
-            // Инициализируем i18n
-            await this.i18n.init();
-            console.log('✅ i18n initialized:', this.i18n.getLocale());
-            
-            // Создаем системы
-            this.player = new Player();
-            this.enemySystem = new EnemySystem();
-            this.weaponSystem = new WeaponSystem(this.player);
-            this.waveSystem = new WaveSystem();
-            this.renderer = new Renderer(this.canvas, this.ctx);
-            this.pickupSystem = new PickupSystem(this.player);
-            
-            // UI создаем последним
-            this.ui = new UIManager(this);
-            
-            // Настраиваем ввод
-            this.setupInput();
-            
-            // Ресайз
-            this.renderer.resize();
-            window.addEventListener('resize', () => this.renderer.resize());
-            
-            console.log('✅ Game initialized!');
-            
-        } catch (error) {
-            console.error('❌ Init failed:', error);
-            throw error;
-        }
+        console.log('🎮 Initializing game...');
+        
+        await this.i18n.init();
+        console.log('✅ i18n ready:', this.i18n.getLocale());
+        
+        this.player = new Player();
+        this.enemySystem = new EnemySystem();
+        this.weaponSystem = new WeaponSystem(this.player);
+        this.waveSystem = new WaveSystem();
+        this.renderer = new Renderer(this.canvas, this.ctx);
+        this.pickupSystem = new PickupSystem(this.player);
+        this.ui = new UIManager(this);
+        
+        this.setupInput();
+        this.renderer.resize();
+        
+        window.addEventListener('resize', () => this.renderer.resize());
+        
+        console.log('✅ Game initialized!');
     }
 
     setupInput() {
-        // Используем keydown для всех клавиш
         window.addEventListener('keydown', (e) => {
-            // Сохраняем состояние клавиш (используем code, не зависит от раскладки)
             this.keys[e.code] = true;
             
-            // Пауза
             if (e.code === 'Escape' || e.code === 'KeyP') {
                 e.preventDefault();
                 this.togglePause();
             }
             
-            // Выбор при levelup
             if (this.state === 'levelup') {
-                if (e.code === 'Digit1' || e.code === 'Numpad1') {
+                const numMap = {
+                    'Digit1': 0, 'Numpad1': 0,
+                    'Digit2': 1, 'Numpad2': 1,
+                    'Digit3': 2, 'Numpad3': 2,
+                    'Digit4': 3, 'Numpad4': 3
+                };
+                if (numMap[e.code] !== undefined) {
                     e.preventDefault();
-                    this.selectLevelUpOption(0);
-                } else if (e.code === 'Digit2' || e.code === 'Numpad2') {
-                    e.preventDefault();
-                    this.selectLevelUpOption(1);
-                } else if (e.code === 'Digit3' || e.code === 'Numpad3') {
-                    e.preventDefault();
-                    this.selectLevelUpOption(2);
-                } else if (e.code === 'Digit4' || e.code === 'Numpad4') {
-                    e.preventDefault();
-                    this.selectLevelUpOption(3);
+                    this.selectLevelUpOption(numMap[e.code]);
                 }
-            }
-            
-            // Переключение языка (Ctrl+L)
-            if (e.code === 'KeyL' && e.ctrlKey) {
-                e.preventDefault();
-                this.i18n.toggleLocale();
-                this.updateLanguageButton();
-                console.log('🌐 Language:', this.i18n.getLocale());
             }
         });
         
         window.addEventListener('keyup', (e) => {
             this.keys[e.code] = false;
         });
-        
-        // Предотвращаем контекстное меню
-        window.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 
     start() {
         console.log('🚀 Starting game...');
-        this.lastTime = performance.now();
-        this.state = 'playing';
+        
+        // Сброс
+        this.player.reset();
+        this.enemySystem = new EnemySystem();
+        this.weaponSystem = new WeaponSystem(this.player);
+        this.waveSystem = new WaveSystem();
+        this.pickupSystem = new PickupSystem(this.player);
         this.gameTime = 0;
         
-        // Скрываем меню
+        this.lastTime = performance.now();
+        this.state = 'playing';
+        
         this.ui.hideAll();
         
-        // Запускаем цикл
         requestAnimationFrame(this.gameLoop);
     }
 
     gameLoop(time) {
-        if (this.state === 'dead') return;
-        
         this.dt = Math.min((time - this.lastTime) / 1000, 0.1);
         this.lastTime = time;
         
@@ -154,14 +123,13 @@ export class Game {
     update(dt) {
         this.gameTime += dt;
         
-        // Движение игрока (используем code для любой раскладки)
+        // Движение игрока
         let dx = 0, dy = 0;
         if (this.keys['KeyW'] || this.keys['ArrowUp']) dy -= 1;
         if (this.keys['KeyS'] || this.keys['ArrowDown']) dy += 1;
         if (this.keys['KeyA'] || this.keys['ArrowLeft']) dx -= 1;
         if (this.keys['KeyD'] || this.keys['ArrowRight']) dx += 1;
         
-        // Нормализация
         if (dx !== 0 || dy !== 0) {
             const len = Math.sqrt(dx * dx + dy * dy);
             dx /= len;
@@ -176,24 +144,22 @@ export class Game {
         this.weaponSystem.update(dt, this.enemySystem.enemies);
         this.pickupSystem.update(dt);
         
-        // Проверка коллизий игрока с врагами
-        this.checkPlayerCollisions(dt);
-        
-        // Проверка коллизий снарядов с врагами
+        // Коллизии
+        this.checkPlayerCollisions();
         this.checkProjectileCollisions();
         
-        // Проверка левелапа
+        // Левелап
         if (this.player.exp >= this.player.expToNext) {
             this.levelUp();
         }
         
-        // Обновление неуязвимости
+        // Неуязвимость
         if (this.player.invincible > 0) {
             this.player.invincible -= dt;
         }
     }
 
-    checkPlayerCollisions(dt) {
+    checkPlayerCollisions() {
         if (this.player.invincible > 0) return;
         
         for (const enemy of this.enemySystem.enemies) {
@@ -202,18 +168,11 @@ export class Game {
             const dist = Math.sqrt(dx * dx + dy * dy);
             
             if (dist < this.player.radius + enemy.radius) {
-                // Наносим урон игроку
                 const damage = Math.max(1, enemy.damage - this.player.armor);
                 this.player.hp -= damage;
                 this.player.invincible = 0.5;
                 this.audio.play('damage');
                 
-                // Отбрасывание игрока
-                const knockback = 50;
-                this.player.x += (dx / dist) * knockback * dt;
-                this.player.y += (dy / dist) * knockback * dt;
-                
-                // Проверка смерти
                 if (this.player.hp <= 0) {
                     this.player.hp = 0;
                     this.die();
@@ -239,32 +198,21 @@ export class Game {
                 const dist = Math.sqrt(dx * dx + dy * dy);
                 
                 if (dist < (proj.radius || 5) + enemy.radius) {
-                    // Наносим урон врагу
+                    // Наносим урон (враг - простой объект)
                     enemy.hp -= proj.damage;
                     enemy.hitFlash = 0.1;
                     this.audio.play('hit');
                     
-                    // Эффект при попадании
-                    if (proj.onHit) {
-                        proj.onHit(enemy);
-                    }
-                    
-                    // Проверка смерти врага
                     if (enemy.hp <= 0) {
                         this.onEnemyKilled(enemy);
                         enemies.splice(j, 1);
                     }
                     
                     hit = true;
-                    
-                    // Если снаряд не пробивающий - выходим
-                    if (!proj.piercing) {
-                        break;
-                    }
+                    if (!proj.piercing) break;
                 }
             }
             
-            // Удаляем снаряд если попал и не пробивающий
             if (hit && !proj.piercing) {
                 projectiles.splice(i, 1);
             }
@@ -276,17 +224,12 @@ export class Game {
         this.player.exp += enemy.exp;
         this.audio.play('kill');
         
-        // Шанс дропа опыта
         if (Math.random() < 0.4) {
             this.pickupSystem.spawnPickup(enemy.x, enemy.y, 'exp');
         }
-        
-        // Шанс дропа золота
         if (Math.random() < 0.1) {
             this.pickupSystem.spawnPickup(enemy.x, enemy.y, 'gold');
         }
-        
-        // Шанс дропа здоровья
         if (this.player.hp < this.player.maxHp * 0.5 && Math.random() < 0.05) {
             this.pickupSystem.spawnPickup(enemy.x, enemy.y, 'health');
         }
@@ -300,20 +243,17 @@ export class Game {
         this.player.hp = Math.min(this.player.maxHp, this.player.hp + 10);
         this.audio.play('levelup');
         
-        // Генерируем опции
         this.levelUpOptions = this.generateLevelUpOptions();
         this.ui.showLevelUp(this.levelUpOptions);
     }
 
     generateLevelUpOptions() {
         const options = [];
-        
-        // Доступное оружие
         const currentWeaponTypes = this.weaponSystem.weapons.map(w => w.type);
-        const allWeapons = ['whip', 'magic_wand', 'garlic', 'fire_wand', 'king_bible', 
+        const allWeapons = ['magic_wand', 'garlic', 'fire_wand', 'king_bible', 
                            'santa_water', 'lightning_ring', 'axe', 'cross'];
         
-        // Можно добавить новое оружие если есть слоты
+        // Новое оружие
         if (this.weaponSystem.weapons.length < this.MAX_WEAPONS) {
             allWeapons.forEach(type => {
                 if (!currentWeaponTypes.includes(type)) {
@@ -321,6 +261,7 @@ export class Game {
                         type: 'weapon',
                         id: type,
                         name: this.i18n.t(`weapons.${type}`),
+                        desc: this.i18n.t(`weapons.${type}_desc`),
                         icon: this.weaponSystem.getWeaponIcon(type),
                         level: 1
                     });
@@ -328,20 +269,21 @@ export class Game {
             });
         }
         
-        // Улучшение существующего оружия
+        // Улучшение оружия
         this.weaponSystem.weapons.forEach(weapon => {
             if (weapon.level < weapon.maxLevel) {
                 options.push({
                     type: 'upgrade',
                     weaponType: weapon.type,
                     name: `${this.i18n.t(`weapons.${weapon.type}`)} LV${weapon.level + 1}`,
+                    desc: `Уровень ${weapon.level + 1}/${weapon.maxLevel}`,
                     icon: weapon.icon,
                     level: weapon.level + 1
                 });
             }
         });
         
-        // Пассивные предметы
+        // Пассивки
         const passives = ['spinach', 'armor', 'hollow_heart', 'empty_tome', 
                          'candelabrador', 'spellbinder', 'duplicator', 'attractorb'];
         
@@ -350,26 +292,26 @@ export class Game {
                 type: 'passive',
                 id: type,
                 name: this.i18n.t(`passives.${type}`),
+                desc: this.i18n.t(`passives.${type}_desc`),
                 icon: this.getPassiveIcon(type),
                 level: 1
             });
         });
         
-        // Перемешиваем и берем 4 опции
-        this.shuffleArray(options);
+        // Перемешиваем
+        for (let i = options.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [options[i], options[j]] = [options[j], options[i]];
+        }
+        
         return options.slice(0, Math.min(4, options.length));
     }
 
     getPassiveIcon(type) {
         const icons = {
-            spinach: '🥬',
-            armor: '🛡️',
-            hollow_heart: '❤️',
-            empty_tome: '📖',
-            candelabrador: '🕯️',
-            spellbinder: '🔮',
-            duplicator: '🔄',
-            attractorb: '🧲'
+            spinach: '🥬', armor: '🛡️', hollow_heart: '❤️',
+            empty_tome: '📖', candelabrador: '🕯️', spellbinder: '🔮',
+            duplicator: '🔄', attractorb: '🧲'
         };
         return icons[type] || '❓';
     }
@@ -393,34 +335,21 @@ export class Game {
     }
 
     addPassive(type) {
-        // Заглушка для пассивных предметов
         switch(type) {
-            case 'spinach':
-                this.player.might += 0.1;
+            case 'spinach': this.player.might += 0.1; break;
+            case 'armor': this.player.armor += 1; break;
+            case 'hollow_heart': 
+                const bonus = Math.floor(this.player.maxHp * 0.2);
+                this.player.maxHp += bonus;
+                this.player.hp += bonus;
                 break;
-            case 'armor':
-                this.player.armor += 1;
-                break;
-            case 'hollow_heart':
-                this.player.maxHp += Math.floor(this.player.maxHp * 0.2);
-                break;
-            case 'empty_tome':
-                this.player.cooldown += 0.08;
-                break;
-            case 'candelabrador':
-                this.player.area += 0.1;
-                break;
-            case 'spellbinder':
-                this.player.duration += 0.1;
-                break;
-            case 'duplicator':
-                this.player.amount += 1;
-                break;
-            case 'attractorb':
-                this.player.magnet += 1;
-                break;
+            case 'empty_tome': this.player.cooldown += 0.08; break;
+            case 'candelabrador': this.player.area += 0.1; break;
+            case 'spellbinder': this.player.duration += 0.1; break;
+            case 'duplicator': this.player.amount += 1; break;
+            case 'attractorb': this.player.magnet += 1; break;
         }
-        console.log(`Added passive: ${type}`);
+        console.log(`✅ Added passive: ${type}`);
     }
 
     togglePause() {
@@ -439,7 +368,6 @@ export class Game {
         this.audio.play('death');
         this.ui.showDeath(this.player);
         
-        // Сохраняем рекорд
         const record = localStorage.getItem('survivor-record') || 0;
         if (this.player.kills > record) {
             localStorage.setItem('survivor-record', this.player.kills);
@@ -452,53 +380,85 @@ export class Game {
         this.renderer.drawPickups(this.pickupSystem.pickups, this.player);
         this.renderer.drawEnemies(this.enemySystem.enemies, this.player);
         
-        // Отрисовка снарядов
+        // Снаряды
         this.weaponSystem.projectiles.forEach(p => {
             const sx = this.canvas.width / 2 + (p.x - this.player.x);
             const sy = this.canvas.height / 2 + (p.y - this.player.y);
             
             this.ctx.fillStyle = p.color || '#fff';
             this.ctx.beginPath();
-            this.ctx.arc(sx, sy, p.radius || 3, 0, Math.PI * 2);
+            this.ctx.arc(sx, sy, p.radius || 4, 0, Math.PI * 2);
             this.ctx.fill();
         });
         
-        // Отрисовка луж (Santa Water)
+        // Эффекты
+        this.weaponSystem.effects.forEach(e => {
+            const sx = this.canvas.width / 2 + (e.x - this.player.x);
+            const sy = this.canvas.height / 2 + (e.y - this.player.y);
+            this.ctx.fillStyle = e.color;
+            this.ctx.globalAlpha = e.life / e.maxLife;
+            this.ctx.beginPath();
+            this.ctx.arc(sx, sy, e.size || 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        });
+        this.ctx.globalAlpha = 1;
+        
+        // Лужи Santa Water
         this.weaponSystem.weapons.forEach(weapon => {
             if (weapon.getPuddles) {
                 weapon.getPuddles().forEach(puddle => {
                     const sx = this.canvas.width / 2 + (puddle.x - this.player.x);
                     const sy = this.canvas.height / 2 + (puddle.y - this.player.y);
                     
-                    const alpha = Math.min(1, puddle.life / 3);
-                    this.ctx.fillStyle = `rgba(59, 130, 246, ${alpha * 0.3})`;
+                    this.ctx.fillStyle = `rgba(59, 130, 246, 0.3)`;
                     this.ctx.beginPath();
                     this.ctx.arc(sx, sy, puddle.radius, 0, Math.PI * 2);
                     this.ctx.fill();
-                    
-                    this.ctx.strokeStyle = `rgba(59, 130, 246, ${alpha * 0.5})`;
-                    this.ctx.lineWidth = 1;
-                    this.ctx.stroke();
                 });
             }
         });
         
         this.renderer.drawPlayer(this.player);
-        this.renderer.drawUI(this);
+        
+        // HUD
+        this.drawHUD();
     }
 
-    shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
-
-    updateLanguageButton() {
-        const btn = document.getElementById('langButton');
-        if (btn) {
-            const locale = this.i18n.getLocale();
-            btn.textContent = locale === 'ru' ? '🌐 EN' : '🌐 RU';
-        }
+    drawHUD() {
+        const ctx = this.ctx;
+        
+        // Верхняя панель
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, 0, this.canvas.width, 35);
+        
+        ctx.fillStyle = '#fff';
+        ctx.font = '13px Inter, sans-serif';
+        ctx.textAlign = 'left';
+        
+        const hpPercent = (this.player.hp / this.player.maxHp * 100).toFixed(0);
+        ctx.fillText(`❤️ ${Math.ceil(this.player.hp)}/${this.player.maxHp}`, 15, 24);
+        ctx.fillText(`⭐ LV${this.player.level}`, 220, 24);
+        ctx.fillText(`💎 ${this.player.exp}/${this.player.expToNext}`, 340, 24);
+        ctx.fillText(`🌊 Волна ${this.waveSystem.getWave()}`, 500, 24);
+        
+        const mins = Math.floor(this.gameTime / 60);
+        const secs = Math.floor(this.gameTime % 60);
+        ctx.fillText(`⏱ ${mins}:${secs.toString().padStart(2, '0')}`, 650, 24);
+        ctx.fillText(`💀 ${this.player.kills}`, 780, 24);
+        
+        // Оружие снизу
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        ctx.fillRect(0, this.canvas.height - 50, this.canvas.width, 50);
+        
+        ctx.fillStyle = '#fff';
+        ctx.font = '12px Inter, sans-serif';
+        ctx.textAlign = 'center';
+        
+        this.weaponSystem.weapons.forEach((weapon, i) => {
+            const x = 30 + i * 70;
+            const y = this.canvas.height - 25;
+            ctx.fillText(`${weapon.icon}`, x, y - 5);
+            ctx.fillText(`LV${weapon.level}`, x, y + 15);
+        });
     }
 }
