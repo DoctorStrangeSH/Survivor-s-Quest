@@ -15,24 +15,20 @@ export class BaseWeapon {
         this.amount = config.amount || 1;
         this.knockback = config.knockback || 0;
         this.duration = config.duration || 1;
-        this.evolution = config.evolution || null;
-        this.evolutionPassive = config.evolutionPassive || null;
     }
 
     update(dt, enemies, projectiles, effects) {
-        // Уменьшаем таймер с учетом модификатора перезарядки игрока
         this.timer -= dt * this.player.cooldown;
-        
-        // Если таймер истек - атакуем
         if (this.timer <= 0) {
             this.timer = this.cooldown;
             this.attack(enemies, projectiles, effects);
         }
     }
 
-    attack(enemies, projectiles, effects) {
-        // Переопределяется в дочерних классах
-        console.warn(`Attack not implemented for ${this.type}`);
+    attack(enemies, projectiles, effects) {}
+
+    getAttackCount() {
+        return Math.floor(this.amount + this.player.amount - 1);
     }
 
     levelUp() {
@@ -42,27 +38,8 @@ export class BaseWeapon {
         }
     }
 
-    applyLevelUp() {
-        // Переопределяется в дочерних классах
-        console.warn(`LevelUp not implemented for ${this.type}`);
-    }
+    applyLevelUp() {}
 
-    getDamage() {
-        return this.damage * this.player.might;
-    }
-
-    getArea() {
-        return this.area * this.player.area;
-    }
-
-    getSpeed() {
-        return this.speed;
-    }
-
-    canEvolve() {
-        return this.level >= this.maxLevel && 
-               this.evolution && 
-               this.evolutionPassive && 
-               this.player.hasPassive(this.evolutionPassive);
-    }
+    getDamage() { return this.damage * this.player.might; }
+    getArea() { return this.area * this.player.area; }
 }

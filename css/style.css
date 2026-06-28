@@ -1,32 +1,131 @@
+/* ============================================
+   Vampire Survivors Web - Bootstrap 5.3 Theme
+   ============================================ */
+
+:root {
+    --bs-purple: #7c3aed;
+    --bs-purple-dark: #6d28d9;
+    --bs-purple-light: #a855f7;
+    --bs-gold: #fbbf24;
+    --bs-gold-dark: #f59e0b;
+}
+
+/* Базовые стили */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    background: #0a0a0a;
+    background: #0a0a0a !important;
     overflow: hidden;
     font-family: 'Inter', sans-serif;
     cursor: crosshair;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
 #game-container {
     position: relative;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 
 #gameCanvas {
     display: block;
     background: #1a1a2e;
+    image-rendering: auto;
 }
 
-#gameUI {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
+/* Шрифты */
+.font-pixel {
+    font-family: 'Press Start 2P', monospace !important;
+    letter-spacing: 1px;
 }
 
+.font-inter {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Цвета */
+.text-purple { color: #a855f7 !important; }
+.text-gold { color: #fbbf24 !important; }
+.text-green { color: #4ade80 !important; }
+.text-red { color: #ef4444 !important; }
+
+.bg-purple-dark { background: #1e1b4b !important; }
+.border-purple { border-color: #7c3aed !important; }
+
+/* Карточка */
+.card-dark {
+    background: rgba(30, 27, 75, 0.98) !important;
+    border: 2px solid #7c3aed !important;
+    border-radius: 20px !important;
+    box-shadow: 0 0 60px rgba(124, 58, 237, 0.3) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* Кнопки */
+.btn-purple {
+    background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+    color: white !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3) !important;
+}
+
+.btn-purple:hover {
+    background: linear-gradient(135deg, #6d28d9, #5b21b6) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(124, 58, 237, 0.5) !important;
+    color: white !important;
+}
+
+.btn-purple:active {
+    transform: translateY(0) !important;
+}
+
+.btn-gold {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+    color: #000 !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(251, 191, 36, 0.3) !important;
+}
+
+.btn-gold:hover {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(251, 191, 36, 0.5) !important;
+    color: #000 !important;
+}
+
+.btn-outline-light {
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    color: white !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.5) !important;
+    color: white !important;
+}
+
+.btn-outline-danger {
+    border: 1px solid rgba(239, 68, 68, 0.5) !important;
+    color: #ef4444 !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-outline-danger:hover {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: #ef4444 !important;
+    color: #ef4444 !important;
+}
+
+/* Меню */
 .menu {
     position: absolute;
     top: 0;
@@ -36,88 +135,180 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.85);
     z-index: 100;
-    pointer-events: all;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
 
 .menu.hidden {
-    display: none;
+    display: none !important;
 }
 
 .menu-content {
-    background: #1e1b4b;
+    background: rgba(30, 27, 75, 0.95);
     border: 2px solid #7c3aed;
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 30px;
-    max-width: 500px;
-    width: 90%;
-    color: #fff;
+    color: white;
+    box-shadow: 0 0 60px rgba(124, 58, 237, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    animation: menuAppear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes menuAppear {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 .menu-content h2 {
-    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
     color: #a855f7;
+    text-align: center;
     margin-bottom: 20px;
-    font-size: 24px;
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
 }
 
-.menu-content button {
-    display: block;
-    width: 100%;
-    padding: 12px;
-    margin-top: 10px;
-    background: #7c3aed;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.2s;
-}
-
-.menu-content button:hover {
-    background: #6d28d9;
-}
-
-.levelup-option {
+/* Карточки улучшений */
+#levelUpOptions {
     display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    margin-top: 10px;
-    cursor: pointer;
-    transition: all 0.2s;
-    pointer-events: all;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
 }
 
-.levelup-option:hover {
-    border-color: #a855f7;
-    background: rgba(168, 85, 247, 0.1);
+/* Слоты инвентаря */
+#inventorySlots {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    pointer-events: none;
 }
 
-.option-icon {
-    font-size: 32px;
+/* Скроллбар */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(168, 85, 247, 0.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(168, 85, 247, 0.5); }
+
+/* Firefox scrollbar */
+* { scrollbar-width: thin; scrollbar-color: rgba(168, 85, 247, 0.3) transparent; }
+
+/* Form controls */
+.form-select {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    cursor: pointer !important;
 }
 
-.option-name {
+.form-select:focus {
+    border-color: #7c3aed !important;
+    box-shadow: 0 0 0 0.25rem rgba(124, 58, 237, 0.25) !important;
+}
+
+.form-select option {
+    background: #1e1b4b;
+    color: white;
+}
+
+.form-range {
+    accent-color: #7c3aed !important;
+    cursor: pointer !important;
+}
+
+.form-check-input {
+    cursor: pointer !important;
+    accent-color: #7c3aed !important;
+}
+
+.form-check-input:checked {
+    background-color: #7c3aed !important;
+    border-color: #7c3aed !important;
+}
+
+.form-check-label {
+    cursor: pointer !important;
+}
+
+/* Анимации */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.critical-hp {
+    animation: pulse 0.5s ease-in-out infinite;
+}
+
+/* Уведомления */
+.game-notification {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: #000;
+    padding: 15px 30px;
+    border-radius: 15px;
+    z-index: 300;
+    font-family: 'Inter', sans-serif;
     font-weight: 700;
-    font-size: 16px;
+    text-align: center;
+    animation: slideDown 0.5s ease-out, fadeOut 0.5s 2.5s ease-out forwards;
+    box-shadow: 0 10px 30px rgba(251, 191, 36, 0.5);
 }
 
-.option-type {
-    color: #aaa;
-    font-size: 12px;
+@keyframes slideDown {
+    from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
 }
 
-.option-key {
-    margin-left: auto;
-    background: #7c3aed;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: 700;
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .menu-content {
+        padding: 20px;
+        max-width: 95%;
+    }
+    
+    .menu-content h2 {
+        font-size: 16px;
+    }
+    
+    .btn {
+        font-size: 10px !important;
+        padding: 10px !important;
+    }
+    
+    #inventorySlots {
+        left: 5px;
+    }
+    
+    .font-pixel {
+        font-size: 10px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu-content {
+        padding: 15px;
+    }
+    
+    #inventorySlots {
+        display: none;
+    }
+    
+    .btn {
+        font-size: 9px !important;
+        padding: 8px !important;
+    }
 }

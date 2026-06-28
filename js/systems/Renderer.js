@@ -1,3 +1,6 @@
+import { CharacterSprites } from '../entities/CharacterSprites.js';
+import { EnemySprites } from '../entities/EnemySprites.js';
+
 export class Renderer {
     constructor(canvas, ctx) {
         this.canvas = canvas;
@@ -19,23 +22,18 @@ export class Renderer {
         const ctx = this.ctx;
         const ox = player.x % this.tileSize;
         const oy = player.y % this.tileSize;
-        
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
         ctx.lineWidth = 1;
-        
-        for (let x = -ox; x < this.canvas.width; x += this.tileSize) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, this.canvas.height);
-            ctx.stroke();
+        ctx.beginPath();
+        for (let x = -ox; x < this.canvas.width + this.tileSize; x += this.tileSize) {
+            ctx.moveTo(x, -oy);
+            ctx.lineTo(x, this.canvas.height + this.tileSize);
         }
-        
-        for (let y = -oy; y < this.canvas.height; y += this.tileSize) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(this.canvas.width, y);
-            ctx.stroke();
+        for (let y = -oy; y < this.canvas.height + this.tileSize; y += this.tileSize) {
+            ctx.moveTo(-ox, y);
+            ctx.lineTo(this.canvas.width + this.tileSize, y);
         }
+        ctx.stroke();
     }
 
     drawPlayer(player) {
@@ -43,53 +41,25 @@ export class Renderer {
         const cx = this.canvas.width / 2;
         const cy = this.canvas.height / 2;
         
-        // Свечение
-        const glow = ctx.createRadialGradient(cx, cy, 5, cx, cy, 40);
-        glow.addColorStop(0, 'rgba(168, 85, 247, 0.4)');
-        glow.addColorStop(1, 'rgba(168, 85, 247, 0)');
-        ctx.fillStyle = glow;
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
         ctx.beginPath();
-        ctx.arc(cx, cy, 40, 0, Math.PI * 2);
+        ctx.ellipse(cx, cy + 12, 14, 6, 0, 0, Math.PI * 2);
         ctx.fill();
         
-        // Мерцание при уроне
         if (player.invincible > 0 && Math.floor(player.invincible * 20) % 2 === 0) {
             ctx.globalAlpha = 0.4;
         }
         
-        // Тень
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        ctx.beginPath();
-        ctx.ellipse(cx, cy + 10, 14, 6, 0, 0, Math.PI * 2);
-        ctx.fill();
-        
-        // Тело
-        ctx.fillStyle = '#c084fc';
-        ctx.beginPath();
-        ctx.arc(cx, cy, 14, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.strokeStyle = '#a855f7';
-        ctx.lineWidth = 2;
-        ctx.stroke();
+        if (player.characterType) {
+            CharacterSprites.drawCharacter(ctx, cx, cy - 5, 28, player.characterType, player.facing);
+        } else {
+            ctx.fillStyle = player.bodyColor;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 14, 0, Math.PI * 2);
+            ctx.fill();
+        }
         
         ctx.globalAlpha = 1;
-        
-        // Глаза
-        const ex = player.facing.x * 5;
-        const ey = player.facing.y * 5;
-        
-        ctx.fillStyle = '#fff';
-        ctx.beginPath();
-        ctx.arc(cx + ex - 3, cy + ey - 2, 3, 0, Math.PI * 2);
-        ctx.arc(cx + ex + 3, cy + ey - 2, 3, 0, Math.PI * 2);
-        ctx.fill();
-        
-        ctx.fillStyle = '#000';
-        ctx.beginPath();
-        ctx.arc(cx + ex - 2, cy + ey - 2, 1.5, 0, Math.PI * 2);
-        ctx.arc(cx + ex + 4, cy + ey - 2, 1.5, 0, Math.PI * 2);
-        ctx.fill();
     }
 
     drawEnemies(enemies, player) {
@@ -97,53 +67,137 @@ export class Renderer {
         const ox = this.canvas.width / 2 - player.x;
         const oy = this.canvas.height / 2 - player.y;
         
-        enemies.forEach(enemy => {
+        for (let i = 0; i < enemies.length; i++) {
+            const enemy = enemies[i];
             const sx = enemy.x + ox;
             const sy = enemy.y + oy;
             
-            if (sx < -50 || sx > this.canvas.width + 50 || sy < -50 || sy > this.canvas.height + 50) return;
+            if (sx < -50 || sx > this.canvas.width + 50 || sy < -50 || sy > this.canvas.height + 50) continue;
             
-            // Тень
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-            ctx.beginPath();
-            ctx.ellipse(sx, sy + enemy.radius * 0.6, enemy.radius, enemy.radius * 0.4, 0, 0, Math.PI * 2);
-            ctx.fill();
+            const dist = Math.hypot(enemy.x - player.x, enemy.y - player.y);
             
-            // Тело
-            ctx.fillStyle = enemy.hitFlash > 0 ? '#fff' : enemy.color;
-            ctx.beginPath();
-            ctx.arc(sx, sy, enemy.radius, 0, Math.PI * 2);
-            ctx.fill();
-            
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-            ctx.lineWidth = 1;
-            ctx.stroke();
-            
-            // HP бар
-            if (enemy.hp < enemy.maxHp) {
-                const bw = enemy.radius * 2;
-                const bh = 3;
-                ctx.fillStyle = '#000';
-                ctx.fillRect(sx - bw / 2, sy - enemy.radius - 8, bw, bh);
-                ctx.fillStyle = '#ef4444';
-                ctx.fillRect(sx - bw / 2, sy - enemy.radius - 8, bw * (enemy.hp / enemy.maxHp), bh);
+            if (dist > 500) {
+                ctx.fillStyle = enemy.hitFlash > 0 ? '#fff' : enemy.color;
+                ctx.beginPath();
+                ctx.arc(sx, sy, enemy.radius, 0, Math.PI * 2);
+                ctx.fill();
+            } else {
+                if (enemy.radius > 10) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+                    ctx.beginPath();
+                    ctx.ellipse(sx, sy + enemy.radius * 0.5, enemy.radius * 0.7, enemy.radius * 0.3, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                
+                EnemySprites.drawEnemy(ctx, enemy, sx, sy);
+                
+                if (enemy.hp < enemy.maxHp && enemy.radius > 8) {
+                    const bw = enemy.radius * 1.5;
+                    const bh = 2;
+                    const by = sy - enemy.radius - 8;
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.fillRect(sx - bw/2, by, bw, bh);
+                    ctx.fillStyle = enemy.hp/enemy.maxHp > 0.5 ? '#4ade80' : enemy.hp/enemy.maxHp > 0.25 ? '#fbbf24' : '#ef4444';
+                    ctx.fillRect(sx - bw/2, by, bw * (enemy.hp/enemy.maxHp), bh);
+                }
             }
-        });
+        }
     }
 
     drawPickups(pickups, player) {
+        if (pickups.length === 0) return;
         const ctx = this.ctx;
         const ox = this.canvas.width / 2 - player.x;
         const oy = this.canvas.height / 2 - player.y;
+        const now = Date.now();
         
-        pickups.forEach(p => {
+        for (let i = 0; i < pickups.length; i++) {
+            const p = pickups[i];
             const sx = p.x + ox;
             const sy = p.y + oy;
+            if (sx < -20 || sx > this.canvas.width + 20 || sy < -20 || sy > this.canvas.height + 20) continue;
+            
+            const size = Math.min(20, (p.size || 5) * (1 + Math.sin(now * 0.004 + i * 0.1) * 0.15));
             
             ctx.fillStyle = p.color;
+            ctx.globalAlpha = 0.8;
             ctx.beginPath();
-            ctx.arc(sx, sy, 5, 0, Math.PI * 2);
+            ctx.arc(sx, sy, size, 0, Math.PI * 2);
             ctx.fill();
-        });
+            
+            ctx.fillStyle = '#fff';
+            ctx.globalAlpha = 0.4;
+            ctx.beginPath();
+            ctx.arc(sx - size*0.2, sy - size*0.2, size*0.25, 0, Math.PI * 2);
+            ctx.fill();
+            
+            if (p.count > 1 && size > 6) {
+                ctx.fillStyle = '#fff';
+                ctx.globalAlpha = 0.9;
+                ctx.font = `bold ${Math.min(12,size)}px Inter`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('x'+p.count, sx, sy);
+            }
+        }
+        ctx.globalAlpha = 1;
+    }
+
+    drawGarlicAura(player, range) {
+        const ctx = this.ctx;
+        const cx = this.canvas.width/2;
+        const cy = this.canvas.height/2;
+        ctx.strokeStyle = 'rgba(168,85,247,0.3)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([8,4]);
+        ctx.beginPath();
+        ctx.arc(cx, cy, range, 0, Math.PI*2);
+        ctx.stroke();
+        ctx.setLineDash([]);
+    }
+
+    drawBooks(books, player) {
+        const ctx = this.ctx;
+        const ox = this.canvas.width/2 - player.x;
+        const oy = this.canvas.height/2 - player.y;
+        ctx.fillStyle = '#6d28d9';
+        for (let i = 0; i < books.length; i++) {
+            const b = books[i];
+            const sx = b.x + ox;
+            const sy = b.y + oy;
+            ctx.beginPath();
+            ctx.arc(sx, sy, 8, 0, Math.PI*2);
+            ctx.fill();
+        }
+    }
+
+    drawHUD(game) {
+        const ctx = this.ctx;
+        const w = this.canvas.width;
+        const p = game.player;
+        
+        ctx.fillStyle = 'rgba(0,0,0,0.8)';
+        ctx.fillRect(0, 0, w, 36);
+        ctx.fillStyle = 'rgba(168,85,247,0.6)';
+        ctx.fillRect(0, 36, w, 2);
+        
+        ctx.font = 'bold 12px Inter';
+        ctx.textAlign = 'left';
+        
+        const hpP = p.hp/p.maxHp;
+        ctx.fillStyle = hpP>0.5?'#4ade80':hpP>0.25?'#fbbf24':'#ef4444';
+        ctx.fillText('❤️ '+Math.ceil(p.hp)+'/'+p.maxHp, 12, 26);
+        ctx.fillStyle = '#fff';
+        ctx.fillText('⭐ '+p.level, 180, 26);
+        ctx.fillStyle = '#a855f7';
+        ctx.fillText('💎 '+p.exp+'/'+p.expToNext, 270, 26);
+        ctx.fillStyle = '#fff';
+        ctx.fillText('🌊 '+game.getWave(), 410, 26);
+        const m = Math.floor(game.gameTime/60);
+        const s = Math.floor(game.gameTime%60);
+        ctx.fillText('⏱ '+m+':'+s.toString().padStart(2,'0'), 500, 26);
+        ctx.fillText('💀 '+p.kills, 600, 26);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillText('🪙 '+p.gold, 680, 26);
     }
 }

@@ -5,8 +5,7 @@ export const EnemyTypes = {
         hp: 10,
         damage: 5,
         exp: 3,
-        color: '#8b5cf6',
-        icon: '🦇'
+        color: '#8b5cf6'
     },
     skeleton: {
         radius: 14,
@@ -14,17 +13,15 @@ export const EnemyTypes = {
         hp: 30,
         damage: 10,
         exp: 7,
-        color: '#94a3b8',
-        icon: '💀'
+        color: '#94a3b8'
     },
     zombie: {
-        radius: 12,
+        radius: 13,
         speed: 60,
-        hp: 40,
+        hp: 45,
         damage: 15,
         exp: 8,
-        color: '#4ade80',
-        icon: '🧟'
+        color: '#4ade80'
     },
     ghost: {
         radius: 11,
@@ -32,8 +29,7 @@ export const EnemyTypes = {
         hp: 15,
         damage: 8,
         exp: 5,
-        color: '#67e8f9',
-        icon: '👻'
+        color: '#67e8f9'
     },
     golem: {
         radius: 20,
@@ -41,8 +37,7 @@ export const EnemyTypes = {
         hp: 100,
         damage: 25,
         exp: 20,
-        color: '#92400e',
-        icon: '🗿'
+        color: '#92400e'
     },
     werewolf: {
         radius: 16,
@@ -50,8 +45,7 @@ export const EnemyTypes = {
         hp: 60,
         damage: 18,
         exp: 15,
-        color: '#78716c',
-        icon: '🐺'
+        color: '#78716c'
     },
     medusa: {
         radius: 13,
@@ -59,25 +53,30 @@ export const EnemyTypes = {
         hp: 50,
         damage: 12,
         exp: 12,
-        color: '#2dd4bf',
-        icon: '🐍'
+        color: '#2dd4bf'
+    },
+    vampire: {
+        radius: 15,
+        speed: 100,
+        hp: 80,
+        damage: 22,
+        exp: 25,
+        color: '#dc2626'
     },
     boss: {
-        radius: 30,
+        radius: 32,
         speed: 30,
-        hp: 500,
-        damage: 40,
-        exp: 100,
-        color: '#ef4444',
-        icon: '👹'
+        hp: 600,
+        damage: 45,
+        exp: 150,
+        color: '#ef4444'
     },
     death: {
-        radius: 25,
-        speed: 100,
+        radius: 28,
+        speed: 80,
         hp: 1000,
-        damage: 50,
+        damage: 60,
         exp: 500,
-        color: '#000000',
-        icon: '💀'
+        color: '#1f2937'
     }
 };
