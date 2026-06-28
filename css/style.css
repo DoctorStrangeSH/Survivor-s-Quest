@@ -1,29 +1,42 @@
 /* ============================================
-   Survivor's Quest ULTIMATE — Стили
+   Survivor's Quest ULTIMATE — Полные стили
    ============================================ */
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* Сброс стилей */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
+/* Основные стили */
 body {
     background: #0a0a0a;
     overflow: hidden;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     user-select: none;
     -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    cursor: crosshair;
 }
 
 #game-container {
     position: relative;
     width: 100vw;
     height: 100vh;
+    overflow: hidden;
 }
 
 #gameCanvas {
     display: block;
     background: #111118;
+    image-rendering: auto;
 }
 
-/* ----- UI ----- */
+/* ============================================
+   UI Обертка
+   ============================================ */
 #gameUI {
     position: absolute;
     top: 0;
@@ -31,21 +44,28 @@ body {
     width: 100%;
     height: 100%;
     pointer-events: none;
+    z-index: 10;
 }
 
 #gameUI > * {
     pointer-events: auto;
 }
 
-/* Верхняя панель */
+/* ============================================
+   Верхняя панель (HUD)
+   ============================================ */
 #topBar {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 20px;
     padding: 12px 20px;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+    min-height: 48px;
 }
 
 .stat {
@@ -55,38 +75,48 @@ body {
     color: #fff;
     font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
 }
 
 .stat-label {
     color: #aaa;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    font-weight: 700;
 }
 
+/* HP и EXP бары */
 .hp-bar, .exp-bar {
     width: 120px;
-    height: 10px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .hp-fill {
     height: 100%;
     background: linear-gradient(90deg, #ff4444, #ff6b6b);
-    border-radius: 10px;
+    border-radius: 12px;
     transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+    min-width: 0;
 }
 
 .exp-fill {
     height: 100%;
     background: linear-gradient(90deg, #a855f7, #7c3aed);
-    border-radius: 10px;
+    border-radius: 12px;
     transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+    min-width: 0;
 }
 
-/* Панель способностей */
+/* ============================================
+   Панель способностей
+   ============================================ */
 #abilitiesBar {
     position: absolute;
     left: 20px;
@@ -94,42 +124,65 @@ body {
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    z-index: 20;
 }
 
 .ability-slot {
-    width: 56px;
-    height: 56px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
+    width: 60px;
+    height: 60px;
+    background: rgba(10, 10, 20, 0.85);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    font-size: 24px;
-    transition: border-color 0.2s ease;
+    font-size: 28px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .ability-slot:hover {
     border-color: #a855f7;
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+    background: rgba(20, 20, 30, 0.9);
+}
+
+.ability-slot:active {
+    transform: scale(0.95);
 }
 
 .ability-key {
     position: absolute;
-    top: -8px;
-    left: -8px;
-    background: #a855f7;
+    top: -10px;
+    left: -10px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
     color: #fff;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 800;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.ability-icon {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.2s ease;
+}
+
+.ability-slot:hover .ability-icon {
+    transform: scale(1.1);
 }
 
 .ability-cooldown {
@@ -137,215 +190,477 @@ body {
     bottom: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.85);
-    border-radius: 0 0 10px 10px;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 0 0 14px 14px;
     text-align: center;
     color: #fbbf24;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 0;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 4px 0;
+    letter-spacing: 0.5px;
+    display: none;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+/* Состояния способностей */
+.ability-slot.cooldown {
+    border-color: rgba(255, 255, 255, 0.1);
+    opacity: 0.7;
+    filter: grayscale(50%);
+}
+
+.ability-slot.ready {
+    animation: abilityPulse 2s ease-in-out infinite;
+}
+
+@keyframes abilityPulse {
+    0%, 100% { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); }
+    50% { box-shadow: 0 4px 25px rgba(168, 85, 247, 0.4); }
+}
+
+/* ============================================
+   Меню (общие стили)
+   ============================================ */
+.menu-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+.menu-overlay.hidden {
     display: none;
 }
 
-/* Меню */
 .menu-box {
     background: rgba(10, 10, 20, 0.95);
     border: 2px solid #a855f7;
-    border-radius: 16px;
+    border-radius: 20px;
     padding: 30px;
     text-align: center;
     color: #fff;
     backdrop-filter: blur(20px);
-    box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
-    max-width: 360px;
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 
+        0 0 60px rgba(168, 85, 247, 0.3),
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        inset 0 0 20px rgba(168, 85, 247, 0.05);
+    max-width: 380px;
     width: 90%;
+    animation: menuAppear 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .menu-box.wide {
-    max-width: 500px;
+    max-width: 520px;
+}
+
+@keyframes menuAppear {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 .menu-box h2 {
     font-family: 'Press Start 2P', monospace;
-    font-size: 20px;
-    margin-bottom: 16px;
+    font-size: 22px;
+    margin-bottom: 20px;
     color: #a855f7;
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
+    line-height: 1.4;
 }
 
 .menu-box p {
-    margin-bottom: 10px;
-    color: #ccc;
+    margin-bottom: 12px;
+    color: #cbd5e1;
     font-size: 14px;
+    line-height: 1.6;
 }
 
 .menu-btn {
     display: block;
     width: 100%;
-    padding: 14px;
-    margin-top: 10px;
-    background: #a855f7;
+    padding: 15px;
+    margin-top: 12px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
     color: #fff;
     border: none;
-    border-radius: 8px;
-    font-size: 12px;
+    border-radius: 12px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: 'Press Start 2P', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.menu-btn:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .menu-btn:hover {
-    background: #9333ea;
-    transform: scale(1.03);
-    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+    background: linear-gradient(135deg, #9333ea, #6d28d9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.5);
 }
 
 .menu-btn:active {
-    transform: scale(0.97);
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(168, 85, 247, 0.3);
 }
 
-/* Карточки улучшений (Level Up) */
+/* ============================================
+   Карточки улучшений (Level Up)
+   ============================================ */
 #upgradeCards {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-top: 12px;
+    margin-top: 20px;
 }
 
 .upgrade-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 16px;
+    border-radius: 16px;
+    padding: 20px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex: 1;
-    min-width: 120px;
+    min-width: 130px;
+    max-width: 160px;
+    position: relative;
+    overflow: hidden;
+}
+
+.upgrade-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
 .upgrade-card:hover {
     border-color: #a855f7;
-    background: rgba(168, 85, 247, 0.1);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.2);
+    background: rgba(168, 85, 247, 0.08);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.2);
+}
+
+.upgrade-card:hover::before {
+    opacity: 1;
+}
+
+.upgrade-card:active {
+    transform: translateY(-2px);
 }
 
 .upgrade-card .icon {
-    font-size: 32px;
-    margin-bottom: 8px;
+    font-size: 36px;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+}
+
+.upgrade-card:hover .icon {
+    transform: scale(1.2) rotate(5deg);
 }
 
 .upgrade-card .name {
     font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 4px;
+    font-size: 15px;
+    margin-bottom: 8px;
     color: #fff;
 }
 
 .upgrade-card .desc {
-    color: #aaa;
-    font-size: 11px;
+    color: #94a3b8;
+    font-size: 12px;
+    line-height: 1.4;
 }
 
-/* Магазин */
+/* ============================================
+   Магазин
+   ============================================ */
 #shopItems {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin: 16px 0;
-    max-height: 300px;
+    gap: 12px;
+    margin: 20px 0;
+    max-height: 350px;
     overflow-y: auto;
+    padding-right: 5px;
 }
 
 .shop-item {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    transition: background 0.2s ease;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    gap: 15px;
 }
 
 .shop-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(168, 85, 247, 0.3);
+    transform: translateX(5px);
 }
 
 .shop-item .name {
     font-weight: 600;
     font-size: 14px;
+    flex: 1;
 }
 
 .shop-item .price {
     color: #fbbf24;
     font-weight: 700;
-    font-size: 14px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.shop-item button {
-    padding: 8px 16px;
-    background: #a855f7;
+.shop-item button,
+.buy-btn {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #a855f7, #7c3aed);
     color: #fff;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    font-weight: 600;
-    font-size: 12px;
-    transition: all 0.2s ease;
+    font-weight: 700;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
 }
 
-.shop-item button:disabled {
-    background: #444;
+.shop-item button:hover:not(:disabled),
+.buy-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #9333ea, #6d28d9);
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
+}
+
+.shop-item button:disabled,
+.buy-btn:disabled {
+    background: #374151;
     cursor: not-allowed;
     opacity: 0.5;
+    transform: none;
 }
 
-.shop-item button:hover:not(:disabled) {
-    background: #9333ea;
-    transform: scale(1.05);
+/* ============================================
+   Экран смерти
+   ============================================ */
+#deathScreen .menu-box {
+    border-color: #ef4444;
+    box-shadow: 0 0 60px rgba(239, 68, 68, 0.3);
 }
 
-/* Центрирование меню */
-#pauseMenu, #deathScreen, #levelUpMenu, #shopMenu {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+#deathScreen h2 {
+    color: #ef4444;
+    text-shadow: 0 0 20px rgba(239, 68, 68, 0.5);
+    animation: deathPulse 2s ease-in-out infinite;
 }
 
-.hidden { display: none !important; }
+@keyframes deathPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
 
-/* Подсказка управления */
+/* ============================================
+   Подсказки управления
+   ============================================ */
 #controlsHint {
     position: absolute;
-    bottom: 20px;
+    bottom: 25px;
     left: 50%;
     transform: translateX(-50%);
-    color: rgba(255, 255, 255, 0.3);
-    font-size: 11px;
+    color: rgba(255, 255, 255, 0.25);
+    font-size: 12px;
     letter-spacing: 1px;
     pointer-events: none;
     text-align: center;
     white-space: nowrap;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 8px 20px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: opacity 0.5s ease;
 }
 
-/* Скроллбар для магазина */
-#shopItems::-webkit-scrollbar { width: 5px; }
-#shopItems::-webkit-scrollbar-track { background: transparent; }
-#shopItems::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+/* ============================================
+   Утилиты
+   ============================================ */
+.hidden {
+    display: none !important;
+}
 
-/* Адаптив */
+/* Центрирование меню */
+#pauseMenu, 
+#deathScreen, 
+#levelUpMenu, 
+#shopMenu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+}
+
+/* ============================================
+   Скроллбар для магазина
+   ============================================ */
+#shopItems::-webkit-scrollbar {
+    width: 6px;
+}
+
+#shopItems::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 10px;
+}
+
+#shopItems::-webkit-scrollbar-thumb {
+    background: rgba(168, 85, 247, 0.3);
+    border-radius: 10px;
+    transition: background 0.3s ease;
+}
+
+#shopItems::-webkit-scrollbar-thumb:hover {
+    background: rgba(168, 85, 247, 0.5);
+}
+
+/* Firefox */
+#shopItems {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(168, 85, 247, 0.3) transparent;
+}
+
+/* ============================================
+   Анимации для чисел урона/лечения
+   ============================================ */
+.floating-text {
+    position: absolute;
+    pointer-events: none;
+    font-weight: 700;
+    font-size: 14px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    animation: floatUp 1s ease-out forwards;
+    z-index: 30;
+}
+
+.floating-text.damage {
+    color: #ef4444;
+}
+
+.floating-text.heal {
+    color: #4ade80;
+}
+
+.floating-text.exp {
+    color: #a855f7;
+}
+
+.floating-text.gold {
+    color: #fbbf24;
+}
+
+@keyframes floatUp {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: translateY(-20px) scale(1.1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-40px) scale(0.8);
+    }
+}
+
+/* ============================================
+   Выбор языка
+   ============================================ */
+#languageSelector .menu-box {
+    min-width: 350px;
+    padding: 40px;
+}
+
+#languageSelector .menu-btn {
+    margin: 15px 0;
+    font-size: 16px;
+    padding: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+#languageSelector .menu-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+}
+
+/* ============================================
+   Адаптивность
+   ============================================ */
 @media (max-width: 768px) {
     #topBar {
         gap: 8px;
         padding: 8px 10px;
-        flex-wrap: wrap;
+        justify-content: space-around;
     }
     
-    .hp-bar, .exp-bar {
+    .hp-bar, 
+    .exp-bar {
         width: 60px;
+        height: 8px;
     }
     
     .stat {
@@ -353,11 +668,13 @@ body {
     }
     
     .stat-label {
-        font-size: 9px;
+        font-size: 8px;
+        letter-spacing: 0.5px;
     }
     
     .menu-box {
         padding: 20px;
+        margin: 10px;
     }
     
     .menu-box h2 {
@@ -371,22 +688,191 @@ body {
     
     #abilitiesBar {
         left: 8px;
-        gap: 8px;
+        gap: 10px;
     }
     
     .ability-slot {
-        width: 44px;
-        height: 44px;
-        font-size: 20px;
+        width: 46px;
+        height: 46px;
+        font-size: 22px;
+        border-radius: 12px;
+    }
+    
+    .ability-key {
+        width: 20px;
+        height: 20px;
+        font-size: 9px;
+        top: -8px;
+        left: -8px;
     }
     
     .upgrade-card {
         min-width: 90px;
-        padding: 12px;
+        padding: 14px;
+    }
+    
+    .upgrade-card .icon {
+        font-size: 28px;
+    }
+    
+    .upgrade-card .name {
+        font-size: 13px;
+    }
+    
+    .upgrade-card .desc {
+        font-size: 10px;
     }
     
     #controlsHint {
-        font-size: 9px;
+        font-size: 10px;
         bottom: 10px;
+        padding: 6px 15px;
+    }
+    
+    #languageSelector .menu-box {
+        min-width: 280px;
+        padding: 25px;
+    }
+    
+    #languageSelector .menu-btn {
+        font-size: 14px;
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #topBar {
+        flex-direction: column;
+        gap: 5px;
+        padding: 8px;
+    }
+    
+    .stat {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .hp-bar, 
+    .exp-bar {
+        width: 80px;
+    }
+    
+    #abilitiesBar {
+        left: 5px;
+        gap: 8px;
+    }
+    
+    .ability-slot {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+    
+    .ability-key {
+        width: 18px;
+        height: 18px;
+        font-size: 8px;
+    }
+    
+    .menu-box {
+        padding: 15px;
+    }
+    
+    .menu-box h2 {
+        font-size: 14px;
+    }
+    
+    .menu-btn {
+        font-size: 9px;
+        padding: 10px;
+    }
+    
+    .upgrade-card {
+        min-width: 80px;
+        padding: 10px;
+    }
+}
+
+/* ============================================
+   Эффекты и анимации
+   ============================================ */
+
+/* Эффект свечения для критических состояний */
+.critical-hp {
+    animation: criticalPulse 0.5s ease-in-out infinite;
+}
+
+@keyframes criticalPulse {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+    }
+}
+
+/* Эффект получения урона */
+.damage-flash {
+    animation: damageFlash 0.3s ease-out;
+}
+
+@keyframes damageFlash {
+    0% { filter: brightness(2); }
+    100% { filter: brightness(1); }
+}
+
+/* Эффект level up */
+.level-up-effect {
+    animation: levelUpGlow 1s ease-out;
+}
+
+@keyframes levelUpGlow {
+    0% { 
+        box-shadow: 0 0 0 rgba(168, 85, 247, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 50px rgba(168, 85, 247, 0.4);
+    }
+    100% { 
+        box-shadow: 0 0 0 rgba(168, 85, 247, 0);
+    }
+}
+
+/* ============================================
+   Загрузочные состояния
+   ============================================ */
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #a855f7;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ============================================
+   Печать (для отладки)
+   ============================================ */
+@media print {
+    body {
+        background: white;
+    }
+    
+    #gameUI {
+        display: none;
     }
 }

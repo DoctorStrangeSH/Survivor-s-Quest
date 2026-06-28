@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="game.title">Survivor's Quest — Выживи!</title>
-    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <title>Survivor's Quest — Выживи!</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚔️</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
 </head>
@@ -12,20 +12,19 @@
     <div id="game-container">
         <canvas id="gameCanvas"></canvas>
         
-        <!-- Выбор языка -->
+        <!-- Экран выбора языка -->
         <div id="languageSelector" class="menu-overlay">
             <div class="menu-box">
-                <h2 data-i18n="menu.language">Выберите язык / Select Language</h2>
-                <button class="menu-btn" onclick="Game.i18n.setLocale('ru')">🇷🇺 Русский</button>
-                <button class="menu-btn" onclick="Game.i18n.setLocale('en')">🇬🇧 English</button>
+                <h2>Выберите язык / Select Language</h2>
+                <button class="menu-btn" id="langRu">🇷🇺 Русский</button>
+                <button class="menu-btn" id="langEn">🇬🇧 English</button>
             </div>
         </div>
 
-        <!-- Игровой UI будет создаваться динамически -->
+        <!-- Игровой UI -->
         <div id="gameUI"></div>
     </div>
     
-    <!-- Загрузка скриптов в правильном порядке -->
     <script type="module" src="js/main.js"></script>
 </body>
 </html>
