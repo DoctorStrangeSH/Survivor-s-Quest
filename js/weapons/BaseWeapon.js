@@ -5,29 +5,34 @@ export class BaseWeapon {
         this.name = config.name;
         this.icon = config.icon;
         this.level = 1;
-        this.maxLevel = 8;
-        this.damage = config.damage;
-        this.cooldown = config.cooldown;
+        this.maxLevel = config.maxLevel || 8;
+        this.damage = config.damage || 10;
+        this.cooldown = config.cooldown || 1;
         this.timer = 0;
-        this.range = config.range;
+        this.range = config.range || 100;
         this.area = config.area || 1;
         this.speed = config.speed || 1;
         this.amount = config.amount || 1;
         this.knockback = config.knockback || 0;
+        this.duration = config.duration || 1;
         this.evolution = config.evolution || null;
         this.evolutionPassive = config.evolutionPassive || null;
     }
 
     update(dt, enemies, projectiles, effects) {
-        this.timer -= dt;
+        // Уменьшаем таймер с учетом модификатора перезарядки игрока
+        this.timer -= dt * this.player.cooldown;
+        
+        // Если таймер истек - атакуем
         if (this.timer <= 0) {
-            this.timer = this.cooldown / this.player.cooldown;
+            this.timer = this.cooldown;
             this.attack(enemies, projectiles, effects);
         }
     }
 
     attack(enemies, projectiles, effects) {
-        // Переопределяется в наследниках
+        // Переопределяется в дочерних классах
+        console.warn(`Attack not implemented for ${this.type}`);
     }
 
     levelUp() {
@@ -38,7 +43,8 @@ export class BaseWeapon {
     }
 
     applyLevelUp() {
-        // Переопределяется в наследниках
+        // Переопределяется в дочерних классах
+        console.warn(`LevelUp not implemented for ${this.type}`);
     }
 
     getDamage() {
@@ -54,6 +60,9 @@ export class BaseWeapon {
     }
 
     canEvolve() {
-        return this.evolution && this.evolutionPassive && this.player.hasPassive(this.evolutionPassive);
+        return this.level >= this.maxLevel && 
+               this.evolution && 
+               this.evolutionPassive && 
+               this.player.hasPassive(this.evolutionPassive);
     }
 }
