@@ -1,0 +1,392 @@
+/* ============================================
+   Survivor's Quest ULTIMATE — Стили
+   ============================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: #0a0a0a;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#gameCanvas {
+    display: block;
+    background: #111118;
+}
+
+/* ----- UI ----- */
+#gameUI {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#gameUI > * {
+    pointer-events: auto;
+}
+
+/* Верхняя панель */
+#topBar {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 12px 20px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.stat-label {
+    color: #aaa;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.hp-bar, .exp-bar {
+    width: 120px;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.hp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff4444, #ff6b6b);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+.exp-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #a855f7, #7c3aed);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+}
+
+/* Панель способностей */
+#abilitiesBar {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ability-slot {
+    width: 56px;
+    height: 56px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-size: 24px;
+    transition: border-color 0.2s ease;
+}
+
+.ability-slot:hover {
+    border-color: #a855f7;
+}
+
+.ability-key {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    background: #a855f7;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 8px rgba(168, 85, 247, 0.4);
+}
+
+.ability-cooldown {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 0 0 10px 10px;
+    text-align: center;
+    color: #fbbf24;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 0;
+    display: none;
+}
+
+/* Меню */
+.menu-box {
+    background: rgba(10, 10, 20, 0.95);
+    border: 2px solid #a855f7;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    color: #fff;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
+    max-width: 360px;
+    width: 90%;
+}
+
+.menu-box.wide {
+    max-width: 500px;
+}
+
+.menu-box h2 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 20px;
+    margin-bottom: 16px;
+    color: #a855f7;
+}
+
+.menu-box p {
+    margin-bottom: 10px;
+    color: #ccc;
+    font-size: 14px;
+}
+
+.menu-btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Press Start 2P', monospace;
+}
+
+.menu-btn:hover {
+    background: #9333ea;
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+}
+
+.menu-btn:active {
+    transform: scale(0.97);
+}
+
+/* Карточки улучшений (Level Up) */
+#upgradeCards {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.upgrade-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex: 1;
+    min-width: 120px;
+}
+
+.upgrade-card:hover {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.2);
+}
+
+.upgrade-card .icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.upgrade-card .name {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: #fff;
+}
+
+.upgrade-card .desc {
+    color: #aaa;
+    font-size: 11px;
+}
+
+/* Магазин */
+#shopItems {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 16px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.shop-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.shop-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.shop-item .name {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.shop-item .price {
+    color: #fbbf24;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.shop-item button {
+    padding: 8px 16px;
+    background: #a855f7;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.2s ease;
+}
+
+.shop-item button:disabled {
+    background: #444;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.shop-item button:hover:not(:disabled) {
+    background: #9333ea;
+    transform: scale(1.05);
+}
+
+/* Центрирование меню */
+#pauseMenu, #deathScreen, #levelUpMenu, #shopMenu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.hidden { display: none !important; }
+
+/* Подсказка управления */
+#controlsHint {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255, 255, 255, 0.3);
+    font-size: 11px;
+    letter-spacing: 1px;
+    pointer-events: none;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Скроллбар для магазина */
+#shopItems::-webkit-scrollbar { width: 5px; }
+#shopItems::-webkit-scrollbar-track { background: transparent; }
+#shopItems::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+
+/* Адаптив */
+@media (max-width: 768px) {
+    #topBar {
+        gap: 8px;
+        padding: 8px 10px;
+        flex-wrap: wrap;
+    }
+    
+    .hp-bar, .exp-bar {
+        width: 60px;
+    }
+    
+    .stat {
+        font-size: 10px;
+    }
+    
+    .stat-label {
+        font-size: 9px;
+    }
+    
+    .menu-box {
+        padding: 20px;
+    }
+    
+    .menu-box h2 {
+        font-size: 16px;
+    }
+    
+    .menu-btn {
+        font-size: 10px;
+        padding: 12px;
+    }
+    
+    #abilitiesBar {
+        left: 8px;
+        gap: 8px;
+    }
+    
+    .ability-slot {
+        width: 44px;
+        height: 44px;
+        font-size: 20px;
+    }
+    
+    .upgrade-card {
+        min-width: 90px;
+        padding: 12px;
+    }
+    
+    #controlsHint {
+        font-size: 9px;
+        bottom: 10px;
+    }
+}

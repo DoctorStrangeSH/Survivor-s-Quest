@@ -1,0 +1,77 @@
+{
+    "game": {
+        "title": "Survivor's Quest - Survive!",
+        "loading": "Loading..."
+    },
+    "menu": {
+        "language": "Select Language / Выберите язык",
+        "pause": "PAUSE",
+        "continue": "CONTINUE",
+        "restart": "RESTART",
+        "shop": "SHOP",
+        "close": "CLOSE"
+    },
+    "ui": {
+        "hp": "HP",
+        "level": "LVL",
+        "exp": "EXP",
+        "gold": "💰",
+        "kills": "⚔️",
+        "time": "⏱",
+        "wave": "Wave",
+        "controls": "[WASD] Move | [Q/E/R] Abilities | [P] Pause | [B] Shop"
+    },
+    "death": {
+        "title": "YOU DIED",
+        "kills": "Kills",
+        "time": "Time",
+        "gold": "Gold",
+        "record": "Record",
+        "wave": "Wave",
+        "playAgain": "PLAY AGAIN"
+    },
+    "levelup": {
+        "title": "LEVEL UP!",
+        "choose": "Choose an upgrade:"
+    },
+    "upgrades": {
+        "damage": "+10 Damage",
+        "damageDesc": "Increase base damage",
+        "speed": "+15% Speed",
+        "speedDesc": "Move faster",
+        "maxHp": "+20 Max HP",
+        "maxHpDesc": "More health",
+        "attackSpeed": "+20% Attack Speed",
+        "attackSpeedDesc": "Attack faster",
+        "abilityPower": "+Ability Power",
+        "abilityPowerDesc": "Damage and healing +50%"
+    },
+    "abilities": {
+        "explosion": "Explosion",
+        "freeze": "Freeze",
+        "heal": "Heal"
+    },
+    "enemy": {
+        "slime": "Slime",
+        "skeleton": "Skeleton",
+        "bat": "Bat",
+        "golem": "Golem",
+        "boss": "BOSS"
+    },
+    "weapon": {
+        "dagger": "Dagger",
+        "axe": "Axe",
+        "flamethrower": "Flamethrower",
+        "lightning": "Lightning",
+        "aura": "Aura"
+    },
+    "shop": {
+        "items": {
+            "heal5": "+5 HP",
+            "maxHp10": "+10 Max HP",
+            "damage5": "+5 Damage",
+            "attackSpeed15": "+15% Attack Speed",
+            "fullHeal": "Full Heal"
+        }
+    }
+}
